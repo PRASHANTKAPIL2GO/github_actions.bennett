@@ -1,5 +1,4 @@
 name: Campus Event Manager Validation
-
 on:
   push:
     branches:
