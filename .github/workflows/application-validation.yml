@@ -1,0 +1,40 @@
+name: Campus Event Manager Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+  workflow_dispatch:
+
+jobs:
+  validate-application:
+    name: Validate Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 24.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+
+      - name: Display repository file list
+        run: ls -la
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run application tests
+        run: npm test
+
+      - name: Display triggering event
+        run: echo "Workflow triggered by a(n) ${{ github.event_name }}"
