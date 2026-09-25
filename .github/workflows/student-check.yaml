@@ -14,46 +14,50 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Display student and repository information
+      - name: Display student information
         run: |
+          echo "===== STUDENT INFORMATION ====="
           echo "Student Name:"
-          grep "^Name:" student.txt || true
+          grep "^Name:" student.txt || echo "Name not found"
 
           echo "Roll Number:"
-          grep "^Roll Number:" student.txt || true
+          grep "^Roll Number:" student.txt || echo "Roll Number not found"
 
-          echo "Current Date and Time:"
+          echo "===== DATE AND TIME ====="
           date
 
-          echo "Repository Name:"
-          echo "${{ github.repository }}"
-
-          echo "Branch Name:"
-          echo "${{ github.ref_name }}"
+          echo "===== REPOSITORY INFORMATION ====="
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Branch: $GITHUB_REF_NAME"
 
       - name: Verify student.txt exists
         run: |
-          if [ -f student.txt ]; then
+          echo "Checking student.txt..."
+
+          if [ -f "student.txt" ]; then
             echo "student.txt exists."
           else
-            echo "student.txt does not exist."
+            echo "ERROR: student.txt was not found."
+            echo "Files in repository:"
+            ls -la
             exit 1
           fi
 
       - name: Display student.txt contents
         run: |
-          echo "Contents of student.txt:"
+          echo "===== student.txt CONTENTS ====="
           cat student.txt
 
       - name: Count lines in student.txt
         run: |
-          echo "Number of lines:"
-          wc -l < student.txt
+          echo "===== LINE COUNT ====="
+          wc -l student.txt
 
       - name: Search for GitHub
         run: |
-          echo "Searching for the word GitHub:"
-          if grep -q "GitHub" student.txt; then
+          echo "===== SEARCHING FOR GitHub ====="
+
+          if grep -qi "GitHub" student.txt; then
             echo "The word GitHub was found."
           else
             echo "The word GitHub was not found."
@@ -62,6 +66,8 @@ jobs:
       - name: Create report
         run: |
           echo "Student repository verification completed." > report.txt
+
+          echo "===== REPORT ====="
           cat report.txt
 
       - name: Upload report artifact
